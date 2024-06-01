@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web App</title>
+    <!-- Подключение библиотеки jQuery для упрощения работы с JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Подключение библиотеки Telegram Web Apps для интеграции с ботом -->
+    <script async src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            transition: background-color 0.3s, color 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            font-size: 24px;
+        }
+
+        #coinButton {
+            background: url('coin.png') no-repeat center center;
+            background-size: contain;
+            width: 100px;
+            height: 100px;
+            border: none;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        p {
+            font-size: 18px;
+            margin-top: 20px;
+        }
+
+        /* Светлая тема по умолчанию */
+        body.light {
+            background-color: white;
+            color: black;
+        }
+
+        /* Темная тема */
+        body.dark {
+            background-color: black;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <h1>Web App</h1>
+    <button id="coinButton"></button>
+    <p id="counter">Счётчик: 0</p>
+
+    <script>
+        // Инициализация счётчика
+        var counter = 0;
+
+        // Обработчик клика по кнопке "Монета"
+        $("#coinButton").click(function() {
+            // Увеличение счётчика на 1
+            counter++;
+            // Обновление текста счётчика
+            $("#counter").text("Счётчик: " + counter);
+        });
+
+        // Функция для установки темы
+        function setTheme(theme) {
+            if (theme === 'dark') {
+                document.body.classList.remove('light');
+                document.body.classList.add('dark');
+            } else {
+                document.body.classList.remove('dark');
+                document.body.classList.add('light');
+            }
+        }
+
+        // Проверка предпочтений цветовой схемы пользователя
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            setTheme('dark');
+        } else {
+            setTheme('light');
+        }
+
+        // Сообщаем Telegram, что веб-приложение готово
+        Telegram.WebApp.ready();
+
+        // Устанавливаем тему на основе настроек Telegram
+        const tg = window.Telegram.WebApp;
+        tg.onEvent('themeChanged', function() {
+            setTheme(tg.colorScheme);
+        });
+        setTheme(tg.colorScheme);
+    </script>
+</body>
+</html>
